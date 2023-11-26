@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 
 import Notification from '@/components/Notification';
+import Navbar from '@/components/Navbar';
 import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -23,6 +24,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <div>
                     <Notification />
+                    <Navbar />
                     {children}
                 </div>
             </body>
