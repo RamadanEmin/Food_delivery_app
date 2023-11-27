@@ -1,5 +1,6 @@
 import Menu from './Menu';
 import Link from 'next/link';
+import CartIcon from './CartIcon';
 import Image from 'next/image';
 
 const Navbar = () => {
@@ -29,6 +30,7 @@ const Navbar = () => {
                     <Image src='/phone.png' alt='phone' width={20} height={20} />
                     <span>088 776 65 54</span>
                 </div>
+                <CartIcon />
             </div>
         </div>
     );

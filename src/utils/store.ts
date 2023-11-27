@@ -1,4 +1,7 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+import { ActionTypes, CartType } from '@/types/types';
 
 const INITIAL_STATE = {
     products: [],
@@ -6,7 +9,7 @@ const INITIAL_STATE = {
     totalPrice: 0
 };
 
-export const useCartStore = create((set, get) => ({
+export const useCartStore = create(persist<CartType & ActionTypes>((set, get) => ({
     products: INITIAL_STATE.products,
     totalItems: INITIAL_STATE.totalItems,
     totalPrice: INITIAL_STATE.totalPrice,
