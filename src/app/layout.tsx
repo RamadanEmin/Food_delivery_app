@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
 import './globals.css';
 
 import Notification from '@/components/Notification';
@@ -28,6 +29,7 @@ export default function RootLayout({
                     <Navbar />
                     {children}
                     <Footer />
+                    <ToastContainer position='bottom-right' theme='dark' autoClose={3000} />
                 </div>
             </body>
         </html>
