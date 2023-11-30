@@ -7,6 +7,7 @@ import './globals.css';
 import Notification from '@/components/Notification';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AuthProvider from '@/components/AuthProvider';
 import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -24,13 +25,15 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <div>
-                    <Notification />
-                    <Navbar />
-                    {children}
-                    <Footer />
-                    <ToastContainer position='bottom-right' theme='dark' autoClose={3000} />
-                </div>
+                <AuthProvider>
+                        <div>
+                            <Notification />
+                            <Navbar />
+                            {children}
+                            <Footer />
+                            <ToastContainer position='bottom-right' theme='dark' autoClose={3000}/>
+                        </div>
+                </AuthProvider>
             </body>
         </html>
     );
