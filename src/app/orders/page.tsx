@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -22,6 +22,23 @@ const OrdersPage = () => {
             fetch('http://localhost:3000/api/orders').then(
                 (res) => res.json(),
             ),
+    });
+
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: ({ id, status }: { id: string, status: string }) => {
+            return fetch(`http://localhost:3000/api/orders/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(status)
+            });
+        },
+        onSuccess() {
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
+        }
     });
 
     if (isLoading || status === 'loading') {
@@ -47,7 +64,7 @@ const OrdersPage = () => {
                             <td className='py-6 px-1'>{item.createdAt.toString().slice(0, 10)}</td>
                             <td className='py-6 px-1'>{item.price}</td>
                             <td className='hidden md:block py-6 px-1'>{item.products[0].title}</td>
-                                <td className='py-6 px-1'>{item.status}</td>
+                            <td className='py-6 px-1'>{item.status}</td>
                         </tr>
                     ))}
                 </tbody>
