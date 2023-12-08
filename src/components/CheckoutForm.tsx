@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import AddressForm from './AddressForm';
 
 const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
 
+    const [email, setEmail] = useState('');
     const [message, setMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -87,6 +89,7 @@ const CheckoutForm = () => {
                     layout: 'tabs',
                 }}
             />
+            <AddressForm />
             <button disabled={isLoading || !stripe || !elements} id='submit' className='bg-red-500 text-white p-4 rounded-md w-28'>
                 <span id='button-text'>
                     {isLoading ? <div className='spinner' id='spinner'></div> : 'Pay now'}
