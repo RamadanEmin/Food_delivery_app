@@ -1,7 +1,43 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
+type Inputs = {
+    title: string;
+    desc: string;
+    price: number;
+    catSlug: string;
+};
+
 const AddPage = () => {
-   
+    const { data: session, status } = useSession();
+
+    const [inputs, setInputs] = useState<Inputs>({
+        title: '',
+        desc: '',
+        price: 0,
+        catSlug: ''
+    });
+
+    const router = useRouter();
+
+    if (status === 'loading') {
+        return <p>Loading...</p>;
+    }
+
+    if (status === 'unauthenticated' || !session?.user.isAdmin) {
+        router.push('/');
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setInputs(prev => {
+            return { ...prev, [e.target.name]: e.target.value };
+        });
+    };
+
     return (
         <div className="p-4 lg:px-20 xl:px-40 min-h-[calc(100vh-12rem)] md:min-h-[calc(100vh-9rem)] flex flex-col items-center justify-center text-red-500">
         <form className="flex flex-wrap gap-6">
@@ -29,6 +65,7 @@ const AddPage = () => {
               type="text"
               placeholder="Bella Napoli"
               name="title"
+              onChange={handleChange}
             />
           </div>
           <div className="w-full flex flex-col gap-2">
@@ -38,6 +75,7 @@ const AddPage = () => {
               className="ring-1 ring-red-200 p-4 rounded-sm placeholder:text-red-200 outline-none"
               placeholder="A timeless favorite with a twist, showcasing a thin crust topped with sweet tomatoes, fresh basil and creamy mozzarella."
               name="desc"
+              onChange={handleChange}
             />
           </div>
           <div className="w-full flex flex-col gap-2 ">
@@ -47,6 +85,7 @@ const AddPage = () => {
               type="number"
               placeholder="29"
               name="price"
+              onChange={handleChange}
             />
           </div>
           <div className="w-full flex flex-col gap-2 ">
@@ -56,6 +95,7 @@ const AddPage = () => {
               type="text"
               placeholder="pizzas"
               name="catSlug"
+              onChange={handleChange}
             />
           </div>
           <div className="w-full flex flex-col gap-2">
@@ -81,7 +121,6 @@ const AddPage = () => {
               </button>
             </div>
             <div className="flex flex-wrap gap-4 mt-2">
-              
             </div>
           </div>
           <button
