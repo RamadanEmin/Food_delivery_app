@@ -31,6 +31,7 @@ const AddPage = () => {
         additionalPrice: 0
     });
     const [options, setOptions] = useState<Option[]>([]);
+    const [file, setFile] = useState<File>();
 
     const router = useRouter();
 
@@ -54,9 +55,55 @@ const AddPage = () => {
         });
     };
 
+    const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        const item = (target.files as FileList)[0];
+        setFile(item);
+    };
+
+    const upload = async () => {
+        const data = new FormData();
+        data.append('file', file!);
+        data.append('upload_preset', 'restaurant');
+
+        const res = await fetch('https://api.cloudinary.com/v1_1/dfwt0gion/image/upload', {
+            method: 'POST',
+            // headers: { 'Content-Type': 'multipart/form-data' },
+            body: data
+        });
+
+        const resData = await res.json();
+
+        return resData.url;
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            const url = await upload();
+
+            const res = await fetch('http://localhost:3000/api/products', {
+                method: 'POST',
+                body: JSON.stringify({
+                    img: url,
+                    ...inputs,
+                    options,
+                })
+            });
+
+            const data = await res.json();
+
+            router.push(`/product/${data.id}`);
+        } catch (error) {
+            console.log(error);
+
+        }
+    };
+
     return (
         <div className="p-4 lg:px-20 xl:px-40 min-h-[calc(100vh-12rem)] md:min-h-[calc(100vh-9rem)] flex flex-col items-center justify-center text-red-500">
-        <form className="flex flex-wrap gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
           <h1 className="text-4xl mb-2 text-gray-300 font-bold">
             Add New Product
           </h1>
@@ -70,6 +117,7 @@ const AddPage = () => {
             </label>
             <input
               type="file"
+              onChange={handleChangeImage}
               id="file"
               className="hidden"
             />
